@@ -12,7 +12,7 @@ import org.yearup.models.Product;
 import java.util.List;
 
 @RestController
-@RequestMapping("products")
+@RequestMapping("categories")
 @CrossOrigin
 
 public class CategoriesController {
@@ -20,8 +20,7 @@ public class CategoriesController {
     private ProductDao productDao;
 
     @Autowired
-    public CategoriesController(ProductDao productDao, CategoryDao categoryDao)
-    {
+    public CategoriesController(ProductDao productDao, CategoryDao categoryDao) {
         this.productDao = productDao;
         this.categoryDao = categoryDao;
     }
@@ -39,7 +38,7 @@ public class CategoriesController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
     public Category getById(@PathVariable int id) {
         Category category = null;
