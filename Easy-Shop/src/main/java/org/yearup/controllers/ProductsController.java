@@ -55,7 +55,6 @@ public class ProductsController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ResponseStatus(value = HttpStatus.CREATED)
     public Product addProduct(@RequestBody Product product) {
         try {
             return productDao.create(product);
@@ -76,7 +75,6 @@ public class ProductsController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable int id) {
         try {
             Product product = productDao.getById(id);
