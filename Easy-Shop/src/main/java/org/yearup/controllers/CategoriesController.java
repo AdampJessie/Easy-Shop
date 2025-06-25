@@ -12,7 +12,7 @@ import org.yearup.models.Product;
 import java.util.List;
 
 @RestController
-@RequestMapping("categories")
+@RequestMapping("/categories")
 @CrossOrigin
 
 public class CategoriesController {
@@ -28,12 +28,9 @@ public class CategoriesController {
     @GetMapping("")
     @PreAuthorize("permitAll()")
     public List<Category> getAll() {
-        try
-        {
+        try {
             return categoryDao.getAllCategories();
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
@@ -42,17 +39,13 @@ public class CategoriesController {
     @PreAuthorize("permitAll()")
     public Category getById(@PathVariable int id) {
         Category category = null;
-        try
-        {
+        try {
             category = categoryDao.getById(id);
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
 
-        if(category == null)
-        {
+        if (category == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
