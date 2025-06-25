@@ -50,7 +50,7 @@ public class ShoppingCartController
     public ShoppingCartItem addToCart(Principal principal, @PathVariable int productID) {
         try {
             int userId = getUserId(principal);
-            return shoppingCartDao.addToCart(userId, productID, userId);
+            return shoppingCartDao.addToCart(userId, productID);
         }
         catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
