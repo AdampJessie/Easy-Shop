@@ -8,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.yearup.data.ProductDao;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.data.UserDao;
-import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
 import org.yearup.models.ShoppingCartItem;
 import org.yearup.models.User;
@@ -39,8 +38,7 @@ public class ShoppingCartController
     @GetMapping("")
     public ShoppingCart getCart(Principal principal) {
         try {
-            int userId = getUser(principal).getId();
-
+            int userId = getUserId(principal);
             return shoppingCartDao.getByUserId(userId);
         }
         catch(Exception e) {
@@ -49,19 +47,19 @@ public class ShoppingCartController
     }
 
     @PostMapping("products/{id}")
-    public ShoppingCart addToCart(Principal principal, @PathVariable int productID) {
+    public ShoppingCartItem addToCart(Principal principal, @PathVariable int productID) {
         try {
-            int userId = getUser(principal).getId();
-
+            int userId = getUserId(principal);
             return shoppingCartDao.addToCart(userId, productID, userId);
         }
         catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
+
     }
 
     @PutMapping("products/{id}")
-    public ShoppingCart updateCartItem(Principal principal, @PathVariable int productID, @RequestBody ShoppingCartItem item) {
+    public ShoppingCartItem updateCartItem(Principal principal, @PathVariable int productID, @RequestBody ShoppingCartItem item) {
         try {
             int userId = getUser(principal).getId();
 
@@ -73,23 +71,24 @@ public class ShoppingCartController
     }
 
     @DeleteMapping("")
-    public ShoppingCart clearCart(Principal principal) {
+    public void clearCart(Principal principal) {
         try {
-            int userId = getUser(principal).getId();
+            int userId = getUserId(principal);
 
-            return shoppingCartDao.clearCart(userId);
+            shoppingCartDao.clearCart(userId);
         }
         catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 
-    public User getUser(Principal principal) {
+    public int getUserId(Principal principal) {
         try {
             // get the currently logged in username
             String userName = principal.getName();
             // find database user by userId
-            return userDao.getByUserName(userName);
+             User user = userDao.getByUserName(userName);
+            return user.getId();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
