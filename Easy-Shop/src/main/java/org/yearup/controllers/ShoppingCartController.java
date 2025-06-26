@@ -61,7 +61,7 @@ public class ShoppingCartController
     @PutMapping("products/{id}")
     public ShoppingCartItem updateCartItem(Principal principal, @PathVariable int productID, @RequestBody ShoppingCartItem item) {
         try {
-            int userId = getUser(principal).getId();
+            int userId = getUserId(principal);
 
             return shoppingCartDao.updateCartItem(userId, productID, item);
         }
