@@ -18,7 +18,7 @@ import java.security.Principal;
 // only logged in users should have access to these actions
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("cart")
 @PreAuthorize("isAuthenticated()")
 @CrossOrigin
 public class ShoppingCartController
@@ -26,13 +26,11 @@ public class ShoppingCartController
     // a shopping cart requires
     private ShoppingCartDao shoppingCartDao;
     private UserDao userDao;
-    private ProductDao productDao;
 
     @Autowired
-    public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao) {
+    public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao) {
         this.shoppingCartDao = shoppingCartDao;
         this.userDao = userDao;
-        this.productDao = productDao;
     }
 
     @GetMapping("")
@@ -47,7 +45,7 @@ public class ShoppingCartController
     }
 
     @PostMapping("products/{id}")
-    public ShoppingCartItem addToCart(Principal principal, @PathVariable int productID) {
+    public ShoppingCart addToCart(Principal principal, @PathVariable("id") int productID) {
         try {
             int userId = getUserId(principal);
             return shoppingCartDao.addToCart(userId, productID);
@@ -59,11 +57,11 @@ public class ShoppingCartController
     }
 
     @PutMapping("products/{id}")
-    public ShoppingCartItem updateCartItem(Principal principal, @PathVariable int productID, @RequestBody ShoppingCartItem item) {
+    public void updateCartItem(Principal principal, @PathVariable("id") int productID, @RequestBody int quantity) {
         try {
             int userId = getUserId(principal);
 
-            return shoppingCartDao.updateCartItem(userId, productID, item);
+            shoppingCartDao.updateCartItem(userId, productID, quantity);
         }
         catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
